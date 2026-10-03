@@ -1,0 +1,2 @@
+# 编码样张必须保持提交时的原始字节，禁止换行符转换
+tests/fixtures/*.txt binary

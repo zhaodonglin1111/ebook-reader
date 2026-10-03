@@ -21,6 +21,43 @@ body {
   font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
 
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: .8em;
+  height: 48px;
+  padding: 0 1em;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  font-size: 14px;
+}
+
+.topbar .spacer { flex: 1; }
+.app-title { font-weight: 600; }
+.book-name { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.progress { color: var(--muted); }
+
+.topbar button {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--fg);
+  padding: .3em .8em;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.topbar button:hover { border-color: var(--accent); color: var(--accent); }
+
+/* 阅读区 = 唯一滚动容器：翻页/锚点恢复都基于它的 scrollTop */
+#reader {
+  position: relative;
+  height: calc(100vh - 48px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 .page {
   max-width: 42em;
   margin: 0 auto;
@@ -29,6 +66,31 @@ body {
   line-height: var(--line-height);
 }
 
+.chapter-title { color: var(--accent); font-size: 1.25em; margin: 0 0 1.2em; }
+
 .page p { margin: 0 0 0.6em; text-indent: 2em; }
 
 .muted { color: var(--muted); }
+
+.welcome {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+.welcome[hidden] { display: none; }
+
+.welcome-card { text-align: center; padding: 2em; border: 1px dashed var(--border); border-radius: 8px; }
+
+.welcome-card button.primary {
+  margin-top: .8em;
+  padding: .5em 1.4em;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 15px;
+  cursor: pointer;
+}
