@@ -12,6 +12,13 @@
   <span id="book-name" class="book-name"></span>
   <span class="spacer"></span>
   <span id="progress" class="progress" hidden></span>
+  <span class="divider" id="bar-divider" hidden></span>
+  <div class="type-controls" id="type-controls" hidden>
+    <button id="btn-font-out" type="button" title="缩小字号">A−</button>
+    <button id="btn-font-in" type="button" title="放大字号">A＋</button>
+    <button id="btn-line" type="button" title="切换行距">行距</button>
+  </div>
+  <button id="btn-toc" type="button" title="目录 (Ctrl+\)" hidden>目录</button>
   <button id="btn-open" type="button">打开 TXT</button>
   <input id="file-input" type="file" accept=".txt,text/plain" hidden>
 </header>
@@ -28,6 +35,14 @@
     </div>
   </div>
 </main>
+
+<aside id="toc" class="toc-drawer" hidden>
+  <header class="toc-head">
+    <span>目录</span>
+    <button id="toc-close" type="button" title="关闭 (Esc)">✕</button>
+  </header>
+  <ul id="toc-list" class="toc-list"></ul>
+</aside>
 
 <script type="module" src="src/app.js"></script>
 </body>

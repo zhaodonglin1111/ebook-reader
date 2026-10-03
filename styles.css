@@ -94,3 +94,62 @@ body {
   font-size: 15px;
   cursor: pointer;
 }
+
+/* —— M2：排版档位控件 + 目录抽屉 —— */
+.divider { width: 1px; height: 20px; background: var(--border); }
+
+.type-controls { display: flex; gap: .4em; }
+
+.topbar button.on {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.toc-drawer {
+  position: fixed;
+  top: 48px;
+  right: 0;
+  bottom: 0;
+  width: min(320px, 80vw);
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(0);
+  transition: transform .18s ease;
+  z-index: 10;
+}
+
+.toc-drawer[hidden] { display: none; }
+
+.toc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .6em 1em;
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.toc-head button { border: none; background: none; font-size: 14px; color: var(--muted); cursor: pointer; }
+
+.toc-list {
+  list-style: none;
+  margin: 0;
+  padding: .4em 0;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.toc-list li {
+  padding: .45em 1em;
+  cursor: pointer;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toc-list li:hover { background: var(--bg); color: var(--accent); }
+
+.toc-list li.active { color: var(--accent); font-weight: 600; background: var(--bg); }

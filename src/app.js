@@ -11,6 +11,11 @@ const welcome = $("#welcome");
 const fileInput = $("#file-input");
 const bookNameEl = $("#book-name");
 const progressEl = $("#progress");
+const btnToc = $("#btn-toc");
+const tocDrawer = $("#toc");
+const tocList = $("#toc-list");
+const typeControls = $("#type-controls");
+const barDivider = $("#bar-divider");
 
 // —— 运行时状态 ——
 let book = null;            // { name, byteSize, lastModified, text, chapters }
@@ -20,6 +25,63 @@ let saveTimer = 0;
 
 const bookKey = (b) => `${b.name}:${b.byteSize}:${b.lastModified}`;
 const textLen = () => (book ? book.text.length : 0);
+
+// —— 排版档位（全局设置，与具体书无关） ——
+const FONT_SIZES = [17, 20, 24];        // 小 / 中 / 大
+const LINE_HEIGHTS = [1.6, 1.9];
+const SETTINGS_KEY = "reader:settings";
+let settings = { fontSize: 1, lineHeight: 1 };
+
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    const s = raw ? JSON.parse(raw) : null;
+    if (s) {
+      const valid = (v, n) => Number.isInteger(v) && v >= 0 && v < n;
+      settings.fontSize = valid(s.fontSize, FONT_SIZES.length) ? s.fontSize : 1;
+      settings.lineHeight = valid(s.lineHeight, LINE_HEIGHTS.length) ? s.lineHeight : 1;
+    }
+  } catch { /* 坏数据用默认档 */ }
+}
+
+function applySettings() {
+  const root = document.documentElement.style;
+  root.setProperty("--font-size", FONT_SIZES[settings.fontSize] + "px");
+  root.setProperty("--line-height", String(LINE_HEIGHTS[settings.lineHeight]));
+  $("#btn-line").classList.toggle("on", settings.lineHeight === 1);
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch {}
+}
+
+// 档位变化只影响渲染：改完重走一遍"反向恢复"，偏移不回写
+function changeSetting(patch) {
+  Object.assign(settings, patch);
+  applySettings();
+  if (book) goTo(offset);
+}
+
+// —— 目录抽屉 ——
+function buildToc() {
+  tocList.textContent = "";
+  book.chapters.forEach((ch, i) => {
+    const li = document.createElement("li");
+    li.dataset.index = String(i);
+    li.textContent = ch.title || "正文";
+    li.title = ch.title || "正文";
+    li.addEventListener("click", () => {
+      persist();
+      goTo(chapterStart(book.chapters, i));
+      persist();
+      setTocOpen(false);
+    });
+    tocList.appendChild(li);
+  });
+  syncTocHighlight();
+}
+
+function setTocOpen(open) {
+  tocDrawer.hidden = !open;
+  btnToc.classList.toggle("on", open);
+}
 
 // —— 打开与载入 ——
 async function openFile(file) {
@@ -36,6 +98,10 @@ async function openFile(file) {
   bookNameEl.textContent = file.name;
   progressEl.hidden = false;
   welcome.hidden = true;
+  typeControls.hidden = false;
+  barDivider.hidden = false;
+  btnToc.hidden = false;
+  buildToc();
   goTo(offset);
   persist();
 }
@@ -204,10 +270,22 @@ document.addEventListener("drop", (e) => {
 });
 
 document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") { setTocOpen(false); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key === "\\") { e.preventDefault(); setTocOpen(tocDrawer.hidden); return; }
   if (e.key === " " && e.target.matches("input, textarea, select, button")) return;
+  if (tocDrawer.hidden === false) return; // 抽屉打开时不吃翻页键
   if (e.key === " " || e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); turn(1); }
   else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); turn(-1); }
 });
+
+$("#btn-line").addEventListener("click", () =>
+  changeSetting({ lineHeight: settings.lineHeight === 0 ? 1 : 0 }));
+$("#btn-font-in").addEventListener("click", () =>
+  changeSetting({ fontSize: Math.min(settings.fontSize + 1, FONT_SIZES.length - 1) }));
+$("#btn-font-out").addEventListener("click", () =>
+  changeSetting({ fontSize: Math.max(settings.fontSize - 1, 0) }));
+btnToc.addEventListener("click", () => setTocOpen(tocDrawer.hidden));
+$("#toc-close").addEventListener("click", () => setTocOpen(false));
 
 reader.addEventListener("click", (e) => {
   if (window.getSelection().toString()) return; // 选文字时不抢点击
@@ -233,3 +311,6 @@ reader.addEventListener("scroll", () => {
 
 document.addEventListener("visibilitychange", () => { if (document.hidden) persist(); });
 window.addEventListener("pagehide", persist);
+
+loadSettings();
+applySettings();
