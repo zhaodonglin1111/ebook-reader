@@ -73,3 +73,12 @@ test("真实样张：楔子/第一章/第二章/番外一/尾声 共 5 章", () 
   const titles = detectChapters(text).map((c) => c.title);
   assert.deepEqual(titles, ["楔子", "第一章 风雪夜归人", "第二章　山神庙", "番外一 旧时月色", "尾声"]);
 });
+
+test("首个标题前的内容有归属：补无题首章", () => {
+  const text = "书名：风雪集\n作者：某人\n\n第一章 起点\n正文。\n";
+  const chapters = detectChapters(text);
+  assert.equal(chapters[0].title, "");
+  assert.equal(chapters[0].start, 0);
+  assert.equal(chapters[1].title, "第一章 起点");
+  assert.equal(chapters[0].end, chapters[1].start);
+});

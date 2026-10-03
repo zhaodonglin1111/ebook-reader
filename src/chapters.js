@@ -25,6 +25,8 @@ export function detectChapters(text) {
     // 0 命中退化为单章，保证"能读"底线
     return [{ index: 0, title: "", start: 0, end }];
   }
+  // 第一个标题前有内容（书名行/作者行等）：补一个无题首章，保证全文都有归属
+  if (starts[0].start > 0) starts.unshift({ title: "", start: 0 });
   return starts.map((h, i) => ({
     index: i,
     title: h.title,
