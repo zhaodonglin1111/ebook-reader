@@ -1,0 +1,34 @@
+/* 主题变量层：v0.1 只填一套明色，加暗色时新增 :root[data-theme="dark"] 即可 */
+:root {
+  --bg: #faf8f4;        /* 页面底色（米白） */
+  --fg: #2b2b2b;        /* 正文（深灰） */
+  --muted: #8a8578;     /* 次要文字：进度、章节数 */
+  --accent: #a0522d;    /* 高亮：当前章标题、热区反馈 */
+  --panel: #f2efe8;     /* 目录抽屉 / 设置条 */
+  --border: #ddd6c9;    /* 分隔线 */
+
+  --font-size: 20px;    /* 排版档位：小 17 / 中 20 / 大 24 */
+  --line-height: 1.9;   /* 行距档位：1.6 / 1.9 */
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+.page {
+  max-width: 42em;
+  margin: 0 auto;
+  padding: 1.5em 1.2em 4em;
+  font-size: var(--font-size);
+  line-height: var(--line-height);
+}
+
+.page p { margin: 0 0 0.6em; text-indent: 2em; }
+
+.muted { color: var(--muted); }

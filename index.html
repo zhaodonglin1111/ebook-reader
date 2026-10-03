@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>电子书阅读器</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="topbar">
+  <span class="app-title">电子书阅读器</span>
+  <span id="book-name" class="book-name"></span>
+  <span class="spacer"></span>
+  <span id="progress" class="progress" hidden></span>
+  <button id="btn-open" type="button">打开 TXT</button>
+  <input id="file-input" type="file" accept=".txt,text/plain" hidden>
+</header>
+
+<main id="reader">
+  <article id="chapter" class="page">
+    <p>（占位文本）阅读器骨架已就位，等待打开第一本 TXT。</p>
+  </article>
+  <div id="welcome" class="welcome">
+    <div class="welcome-card">
+      <p>选择或拖入一个本地 TXT 文件开始阅读。</p>
+      <p class="muted">支持 UTF-8 / UTF-8 BOM / GBK 编码，进度保存在本机，不联网、不上传。</p>
+      <button id="welcome-open" class="primary" type="button">打开本地 TXT</button>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="src/app.js"></script>
+</body>
+</html>
